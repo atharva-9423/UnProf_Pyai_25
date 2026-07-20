@@ -15,9 +15,6 @@ from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.runnables import RunnablePassthrough
 from langchain_core.output_parsers import StrOutputParser
 
-# ==========================================
-# 1. Page Config & Strong UI Typography
-# ==========================================
 st.set_page_config(page_title="RAG Chatbot", page_icon="🤖", layout="centered")
 
 st.markdown("""
@@ -63,9 +60,6 @@ st.markdown("""
 st.title("Document AI")
 st.markdown('<p class="subtitle">An intelligent assistant built with Retrieval-Augmented Generation.</p>', unsafe_allow_html=True)
 
-# ==========================================
-# 2. Caching the RAG Backend Setup
-# ==========================================
 @st.cache_resource(show_spinner="Booting up AI & Loading Documents...")
 def initialize_rag():
     docs_folder = "documents"
@@ -134,49 +128,39 @@ def initialize_rag():
 
 rag_chain = initialize_rag()
 
-# ==========================================
-# 3. Session State & Chat History
-# ==========================================
 if "messages" not in st.session_state:
     st.session_state.messages = []
 if "langchain_history" not in st.session_state:
     st.session_state.langchain_history = []
 
-# Re-draw the chat messages on the screen
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-# ==========================================
-# 4. Chat Input & Processing
-# ==========================================
 if query := st.chat_input("Ask a question about the documents..."):
-    # Display user's new message
+
     with st.chat_message("user"):
         st.markdown(query)
     
-    # Save it to state
+
     st.session_state.messages.append({"role": "user", "content": query})
 
-    # Generate and display assistant's streamed response
     with st.chat_message("assistant"):
         response_placeholder = st.empty()
         full_response = ""
         
         try:
-            # Stream the RAG output chunk by chunk!
+
             for chunk in rag_chain.stream({
                 "input": query,
                 "chat_history": st.session_state.langchain_history
             }):
                 full_response += chunk
-                # Add a blinking cursor effect while typing
+
                 response_placeholder.markdown(full_response + "▌")
-            
-            # Remove cursor when finished
+  
             response_placeholder.markdown(full_response)
             
-            # Save the AI's response to state
             st.session_state.messages.append({"role": "assistant", "content": full_response})
             st.session_state.langchain_history.append(("human", query))
             st.session_state.langchain_history.append(("ai", full_response))
