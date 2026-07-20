@@ -29,9 +29,8 @@ This UI is designed with a focus on **strong typography** (using the Inter font)
 ## 🚀 Setup & Usage
 
 ### 1. Install Dependencies
-Navigate to the `day25` folder and install dependencies:
+Navigate to the `root` folder and install dependencies:
 ```bash
-cd day25
 pip install -U -r requirements.txt
 ```
 
@@ -51,7 +50,7 @@ streamlit run app.py
 *(This will automatically open the web app in your default browser at `http://localhost:8501`)*
 
 ### 4. Start Chatting!
-The chatbot will load the built-in static documents (`day25/documents/sample_notes.txt`). Try asking it some questions and follow-ups!
+The chatbot will load the built-in static documents (`documents/sample_notes.txt`). Try asking it some questions and follow-ups!
 
 ---
 <div align="center">
